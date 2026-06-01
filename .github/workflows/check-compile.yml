@@ -1,0 +1,11 @@
+name: Check PomodoroFocusPro
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: distribution: 'zulu'; java-version: '17'
+      - run: ./gradlew :composeApp:assembleDebug
+      - run: ./gradlew :composeApp:linkDebugFrameworkIosArm64
