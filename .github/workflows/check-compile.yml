@@ -16,3 +16,5 @@ jobs:
           echo "/tmp/gradle/gradle-8.10.2/bin" >> $GITHUB_PATH
       - name: Android Debug
         run: gradle :composeApp:assembleDebug
+      - name: iOS Framework
+        run: gradle :composeApp:linkReleaseFrameworkIosArm64

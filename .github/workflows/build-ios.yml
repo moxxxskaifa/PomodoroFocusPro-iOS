@@ -17,7 +17,7 @@ jobs:
           unzip -q /tmp/gradle.zip -d /tmp/gradle
           echo "/tmp/gradle/gradle-8.10.2/bin" >> $GITHUB_PATH
       - name: Build XCFramework
-        run: gradle :composeApp:assembleXCFramework
+        run: gradle :composeApp:linkReleaseFrameworkIosArm64
       - name: Import Certificate
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
