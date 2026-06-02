@@ -1,4 +1,4 @@
-name: Build iOS IPA
+name: Build & Deploy iOS
 
 on:
   push:
@@ -7,25 +7,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-ipa:
+  check-compile:
     runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: 'zulu', java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v3
+      - run: ./gradlew :composeApp:assembleDebug
+      - run: ./gradlew :composeApp:linkDebugFrameworkIosArm64
+
+  build-and-deploy:
+    needs: check-compile
+    runs-on: macos-latest
+    if: success()
     steps:
       - uses: actions/checkout@v4
       
       - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+        with: { distribution: 'zulu', java-version: '17' }
       
       - uses: gradle/actions/setup-gradle@v3
       
-      - name: Build Compose Multiplatform Framework
+      - name: Build XCFramework
         run: ./gradlew :composeApp:assembleXCFramework
-      
-      - name: Setup Xcode project
-        run: |
-          brew install xcodegen 2>/dev/null || true
-          xcodegen generate 2>/dev/null || echo "No xcodegen available, using manual setup"
       
       - name: Import Certificate
         env:
@@ -33,7 +38,7 @@ jobs:
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
-          CERT_PATH=$RUNNER_TEMP/build_certificate.p12
+          CERT_PATH=$RUNNER_TEMP/build.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
           echo "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $CERT_PATH
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
@@ -49,17 +54,44 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
       
-      - name: Build Archive
+      - name: Build and Archive
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
           xcodebuild -project *.xcodeproj -scheme iosApp -configuration Release \
-            -archivePath $RUNNER_TEMP/app.xcarchive -allowProvisioningUpdates archive || \
-          echo "Xcode project build failed - trying manual xcframework approach"
+            -archivePath $RUNNER_TEMP/app.xcarchive \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            -allowProvisioningUpdates archive || \
+          echo "Xcode project build failed - need manual Xcode project setup"
+      
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath $RUNNER_TEMP/app.xcarchive \
+            -exportPath $RUNNER_TEMP/IPA \
+            -exportOptionsPlist exportOptions.plist \
+            -allowProvisioningUpdates || \
+          echo "No archive to export"
+      
+      - name: Upload to App Store Connect
+        if: success()
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: |
+          if [ -f "$RUNNER_TEMP/IPA/*.ipa" ]; then
+            xcrun altool --upload-app -f $RUNNER_TEMP/IPA/*.ipa \
+              -u "$APPLE_ID" -p "$APP_SPECIFIC_PASSWORD" \
+              --type ios || \
+            echo "Upload failed - check credentials"
+          else
+            echo "No IPA to upload"
+          fi
       
       - name: Upload IPA Artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: PomodoroFocusPro-iOS
+          name: iOS-Build
           path: ${{ runner.temp }}/*.ipa
           if-no-files-found: ignore
