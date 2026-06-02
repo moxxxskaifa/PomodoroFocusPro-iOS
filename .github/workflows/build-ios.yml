@@ -30,7 +30,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
       
       - name: Fix permissions
-        run: chmod +x gradlew composeApp/gradlew
+        run: chmod +x gradlew
       
       - name: Build XCFramework
         run: ./gradlew :composeApp:assembleXCFramework

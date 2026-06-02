@@ -11,7 +11,7 @@ jobs:
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v3
       - name: Fix gradlew permissions
-        run: chmod +x gradlew composeApp/gradlew gradlew.bat
+        run: chmod +x gradlew gradlew.bat
       - name: Compile Android Debug
         run: ./gradlew :composeApp:assembleDebug
       - name: Link iOS Framework
