@@ -1,3 +1,10 @@
-@echo off
-set GRADLE_LIB=C:\Users\Administrator\WorkBuddy\2026-05-31-14-41-11\tmp\gradle-dist\gradle-8.5\lib
-"%JAVA_HOME%/bin/java.exe" -cp "%GRADLE_LIB%\*" org.gradle.launcher.Main %*
+@rem Gradle wrapper
+@if "%DEBUG%"=="" @echo off
+@setlocal
+set DIRNAME=%~dp0
+if "%DIRNAME%"=="" set DIRNAME=.
+set APP_BASE_NAME=%~n0
+set APP_HOME=%DIRNAME%
+set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
+"%JAVA_HOME%/bin/java" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %*
+@endlocal
