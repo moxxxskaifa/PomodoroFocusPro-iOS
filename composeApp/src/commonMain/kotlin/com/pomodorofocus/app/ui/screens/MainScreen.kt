@@ -217,7 +217,8 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
             Row(horizontalArrangement = Arrangement.Center) {
                 Text("🍅", fontSize = 16.sp)
                 Spacer(Modifier.width(4.dp))
-                Text("{state.completedSessions} pomodoro{if (state.completedSessions > 1) "s" else ""} today",
+                val label = if (state.completedSessions > 1) "s" else ""
+                Text("${state.completedSessions} pomodoro${label} today",
                      fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(Modifier.height(4.dp))
