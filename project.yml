@@ -1,7 +1,7 @@
-name: PomodoroFocusPro
+name: Focus Timer Pro
 options:
-  bundleIdPrefix: com.pomodorofocus
-  deploymentTarget: { iOS: "16.0" }
+  deploymentTarget:
+    iOS: "16.0"
 targets:
   iosApp:
     type: application
@@ -11,10 +11,6 @@ targets:
       base:
         INFOPLIST_FILE: iosApp/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.pomodorofocus.app
-        DEVELOPMENT_TEAM: "$(APPLE_TEAM_ID)"
     dependencies:
-      - framework: ../composeApp/build/XCFrameworks/release/ComposeApp.xcframework
+      - framework: composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework
         embed: true
-    preBuildScripts:
-      - name: Build Compose framework
-        script: cd "$SRCROOT/.."; ./gradlew :composeApp:assembleXCFramework

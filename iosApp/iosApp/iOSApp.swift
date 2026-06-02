@@ -1,10 +1,15 @@
 import SwiftUI
 import ComposeApp
-@main struct iOSApp: App {
+
+@main
+struct iOSApp: App {
     var body: some Scene {
-        WindowGroup { ContentView() }
+        WindowGroup {
+            ContentView()
+        }
     }
 }
+
 struct ContentView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         MainViewControllerKt.MainViewController()
