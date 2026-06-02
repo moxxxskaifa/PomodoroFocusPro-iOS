@@ -13,6 +13,6 @@ jobs:
       - name: Fix gradlew permissions
         run: chmod +x gradlew gradlew.bat
       - name: Compile Android Debug
-        run: ./gradlew :composeApp:assembleDebug
+        run: gradle :composeApp:assembleDebug
       - name: Link iOS Framework
-        run: ./gradlew :composeApp:linkDebugFrameworkIosArm64
+        run: gradle :composeApp:linkDebugFrameworkIosArm64
