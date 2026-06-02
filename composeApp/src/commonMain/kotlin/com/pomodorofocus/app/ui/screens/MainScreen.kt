@@ -100,10 +100,11 @@ private fun TimerTab(state: TimerState, onStart: () -> Unit, onPause: () -> Unit
         Spacer(Modifier.weight(1f))
         Box(Modifier.size(260.dp), contentAlignment = Alignment.Center) {
             val arcColor = when (state.mode) { TimerMode.FOCUS -> MaterialTheme.colorScheme.primary; TimerMode.SHORT_BREAK -> MaterialTheme.colorScheme.secondary; else -> Color(0xFF3498DB) }
+            val bgColor = MaterialTheme.colorScheme.surfaceVariant
             Canvas(Modifier.fillMaxSize()) {
                 val stroke = 12.dp.toPx()
                 val s = size.width - stroke
-                drawArc(MaterialTheme.colorScheme.surfaceVariant, -90f, 360f, false, Offset(stroke / 2, stroke / 2), Size(s, s), style = Stroke(stroke, cap = StrokeCap.Round))
+                drawArc(bgColor, -90f, 360f, false, Offset(stroke / 2, stroke / 2), Size(s, s), style = Stroke(stroke, cap = StrokeCap.Round))
                 drawArc(arcColor, -90f, 360f * (1f - progress), false, Offset(stroke / 2, stroke / 2), Size(s, s), style = Stroke(stroke, cap = StrokeCap.Round))
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
