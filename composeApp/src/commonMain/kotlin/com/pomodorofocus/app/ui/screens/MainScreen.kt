@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.pomodorofocus.app.platform.HapticFeedback
 import kotlinx.coroutines.delay
 
-enum class TimerMode { FOCUS, SHORT_BREAK, LONG_BREAK }
+enum class TimerMode { TimerMode.FOCUS, TimerMode.SHORT_BREAK, TimerMode.LONG_BREAK }
 
 data class TimerState(
     val mode: TimerMode = TimerMode.FOCUS,
@@ -104,14 +104,13 @@ private fun TimerTab(state: TimerState, onStart: () -> Unit, onPause: () -> Unit
             Canvas(Modifier.fillMaxSize()) {
                 val stroke = 12.dp.toPx()
                 val s = size.width - stroke
-                drawArc(bgColor, -90f, 360f, false, Offset(stroke / 2, stroke / 2), Size(s, s), style = Stroke(stroke, cap = StrokeCap.Round))
-                drawArc(arcColor, -90f, 360f * (1f - progress), false, Offset(stroke / 2, stroke / 2), Size(s, s), style = Stroke(stroke, cap = StrokeCap.Round))
+                drawArc(bgColor, -90f, 360f, false, Offset(stroke / 2, stroke / 2), Size(width = s, height = s), style = Stroke(stroke, cap = StrokeCap.Round))
+                drawArc(arcColor, -90f, 360f * (1f - progress), false, Offset(stroke / 2, stroke / 2), Size(width = s, height = s), style = Stroke(stroke, cap = StrokeCap.Round))
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                val timeText = min.toString().padStart(2, '0') + ":" + sec.toString().padStart(2, '0')
-                Text(timeText, fontSize = 52.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+                Text( fontSize = 52.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
                 Spacer(Modifier.height(8.dp))
-                Text(when (state.mode) { TimerMode.FOCUS -> "FOCUS TIME"; TimerMode.SHORT_BREAK -> "BREAK"; TimerMode.LONG_BREAK -> "LONG BREAK" },
+                Text(when (state.mode) { TimerMode.FOCUS -> "TimerMode.FOCUS TIME"; TimerMode.SHORT_BREAK -> "BREAK"; TimerMode.LONG_BREAK -> "LONG BREAK" },
                     fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }

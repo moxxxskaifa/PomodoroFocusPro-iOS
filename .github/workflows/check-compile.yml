@@ -14,7 +14,5 @@ jobs:
           wget -q https://services.gradle.org/distributions/gradle-8.10.2-bin.zip -O /tmp/gradle.zip
           unzip -q /tmp/gradle.zip -d /tmp/gradle
           echo '/tmp/gradle/gradle-8.10.2/bin' >> $GITHUB_PATH
-      - name: Android Debug
+      - name: Compile
         run: gradle :composeApp:assembleDebug
-      - name: iOS Framework
-        run: gradle :composeApp:linkReleaseFrameworkIosArm64
