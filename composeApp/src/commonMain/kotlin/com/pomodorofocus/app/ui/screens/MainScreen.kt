@@ -26,7 +26,7 @@ import com.pomodorofocus.app.platform.HapticFeedback
 import kotlinx.coroutines.delay
 import androidx.compose.ui.graphics.vector.ImageVector
 
-enum class TimerMode { FOCUS, SHORT_BREAK, LONG_BREAK }
+enum class TimerMode { TimerMode.FOCUS, TimerMode.SHORT_BREAK, TimerMode.LONG_BREAK }
 
 data class TimerState(
     val mode: TimerMode = TimerMode.FOCUS,
@@ -79,7 +79,7 @@ fun MainScreen() {
                         Icon(
                             if (selectedTab == 0) Icons.Default.BarChart else Icons.Default.Timer,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant
+                            tint = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surfaceVariant
                         )
                     }
                 }
@@ -113,7 +113,7 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             TimerMode.entries.forEach { mode ->
-                val label = when (mode) { FOCUS -> "Focus"; SHORT_BREAK -> "Break"; LONG_BREAK -> "Long" }
+                val label = when (mode) { TimerMode.FOCUS -> "Focus"; TimerMode.SHORT_BREAK -> "Break"; TimerMode.LONG_BREAK -> "Long" }
                 val sel = state.mode == mode
                 val chipColor = when (mode) {
                     TimerMode.FOCUS -> MaterialTheme.colorScheme.primary
@@ -122,11 +122,11 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
                 }
                 MaterialTheme.colorScheme.surface(
                     onClick = { onUpdate(state.copy(mode = mode, isRunning = false,
-                        secondsRemaining = when(mode){FOCUS->25*60;SHORT_BREAK->5*60;LONG_BREAK->15*60},
-                        totalSeconds = when(mode){FOCUS->25*60;SHORT_BREAK->5*60;LONG_BREAK->15*60})) },
+                        secondsRemaining = when(mode){TimerMode.FOCUS->25*60;TimerMode.SHORT_BREAK->5*60;TimerMode.LONG_BREAK->15*60},
+                        totalSeconds = when(mode){TimerMode.FOCUS->25*60;TimerMode.SHORT_BREAK->5*60;TimerMode.LONG_BREAK->15*60})) },
                     shape = RoundedCornerShape(26.dp),
                     color = if (sel) chipColor else Color.Transparent,
-                    contentColor = if (sel) Color.White else MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant
+                    contentColor = if (sel) Color.White else MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surfaceVariant
                 ) {
                     Text(label, modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
                          fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
@@ -159,13 +159,13 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("%02d:%02d".format(min, sec), fontSize = 56.sp,
                      fontWeight = FontWeight.Bold, letterSpacing = 2.sp,
-                     color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.background)
+                     color = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.background)
                 Spacer(Modifier.height(4.dp))
                 val modeText = when (state.mode) {
-                    FOCUS -> "FOCUS TIME"; SHORT_BREAK -> "SHORT BREAK"; LONG_BREAK -> "LONG BREAK"
+                    TimerMode.FOCUS -> "TimerMode.FOCUS TIME"; TimerMode.SHORT_BREAK -> "SHORT BREAK"; TimerMode.LONG_BREAK -> "LONG BREAK"
                 }
                 Text(modeText, fontSize = 12.sp, fontWeight = FontWeight.Medium,
-                     letterSpacing = 3.sp, color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
+                     letterSpacing = 3.sp, color = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surfaceVariant)
             }
         }
 
@@ -183,7 +183,7 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
                 colors = ButtonDefaults.filledTonalButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
                 Icon(Icons.Default.Refresh, null, Modifier.size(22.dp),
-                     tint = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
+                     tint = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surfaceVariant)
             }
 
             // Start/Pause - main button
@@ -201,13 +201,13 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
             FilledTonalButton(onClick = {
                 val next = if (state.mode == TimerMode.FOCUS) TimerMode.SHORT_BREAK else TimerMode.FOCUS
                 onUpdate(state.copy(mode = next, isRunning = false,
-                    secondsRemaining = when(next){FOCUS->25*60;SHORT_BREAK->5*60;LONG_BREAK->15*60},
-                    totalSeconds = when(next){FOCUS->25*60;SHORT_BREAK->5*60;LONG_BREAK->15*60}))
+                    secondsRemaining = when(next){TimerMode.FOCUS->25*60;TimerMode.SHORT_BREAK->5*60;TimerMode.LONG_BREAK->15*60},
+                    totalSeconds = when(next){TimerMode.FOCUS->25*60;TimerMode.SHORT_BREAK->5*60;TimerMode.LONG_BREAK->15*60}))
             }, Modifier.size(52.dp), shape = CircleShape, contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.filledTonalButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
                 Icon(Icons.Default.SkipNext, null, Modifier.size(22.dp),
-                     tint = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
+                     tint = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surfaceVariant)
             }
         }
 
@@ -220,7 +220,7 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
                 Spacer(Modifier.width(4.dp))
                 val label = if (state.completedSessions > 1) "s" else ""
                 Text("${state.completedSessions} pomodoro${label} today",
-                     fontSize = 13.sp, color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
+                     fontSize = 13.sp, color = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surfaceVariant)
             }
             Spacer(Modifier.height(4.dp))
             Row(horizontalArrangement = Arrangement.Center) {
@@ -272,7 +272,7 @@ private fun StatsScreen(state: TimerState) {
             Column(Modifier.padding(20.dp)) {
                 Row(Modifier.fillMaxWidth()) {
                     Text("Complete 8 pomodoros", fontSize = 14.sp,
-                         color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
+                         color = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surfaceVariant)
                     Spacer(Modifier.weight(1.0f))
                     Text("{state.completedSessions}/8", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                 }
@@ -305,7 +305,7 @@ private fun StatsScreen(state: TimerState) {
                 ).forEach { tip ->
                     Row(verticalAlignment = Alignment.Top) {
                         Text("•  ", fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
-                        Text(tip, fontSize = 14.sp, color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant,
+                        Text(tip, fontSize = 14.sp, color = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surfaceVariant,
                              lineHeight = 22.sp)
                     }
                     Spacer(Modifier.height(6.dp))
@@ -328,8 +328,8 @@ private fun StatCard(label: String, value: String, icon: ImageVector, color: Col
             }
             Spacer(Modifier.height(10.dp))
             Text(value, fontSize = 22.sp, fontWeight = FontWeight.Bold,
-                 color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surface)
-            Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
+                 color = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surface)
+            Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.MaterialTheme.colorScheme.oncolorScheme.surfaceVariant)
         }
     }
 }
