@@ -10,7 +10,9 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v3
+      - name: Install Gradle
+        run: brew install gradle
       - name: Compile Android Debug
-        run: java -jar gradle/wrapper/gradle-wrapper.jar :composeApp:assembleDebug
+        run: gradle :composeApp:assembleDebug
       - name: Link iOS Framework
-        run: java -jar gradle/wrapper/gradle-wrapper.jar :composeApp:linkDebugFrameworkIosArm64
+        run: gradle :composeApp:assembleDebug

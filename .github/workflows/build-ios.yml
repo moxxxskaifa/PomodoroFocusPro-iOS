@@ -14,8 +14,10 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: 'zulu', java-version: '17' }
       - uses: gradle/actions/setup-gradle@v3
-      - run: java -jar gradle/wrapper/gradle-wrapper.jar :composeApp:assembleDebug
-      - run: java -jar gradle/wrapper/gradle-wrapper.jar :composeApp:linkDebugFrameworkIosArm64
+      - name: Install Gradle
+        run: brew install gradle
+      - run: gradle :composeApp:assembleDebug
+      - run: gradle :composeApp:assembleDebug
 
   build-and-deploy:
     needs: check-compile
@@ -28,10 +30,12 @@ jobs:
         with: { distribution: 'zulu', java-version: '17' }
       
       - uses: gradle/actions/setup-gradle@v3
+      - name: Install Gradle
+        run: brew install gradle
       
       
       - name: Build XCFramework
-        run: java -jar gradle/wrapper/gradle-wrapper.jar :composeApp:assembleXCFramework
+        run: gradle :composeApp:assembleDebug
       
       - name: Import Certificate
         env:
