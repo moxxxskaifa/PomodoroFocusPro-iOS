@@ -27,10 +27,10 @@ jobs:
         run: |
           echo "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $RUNNER_TEMP/cert.p12
           security create-keychain -p "$KEYCHAIN_PASSWORD" $RUNNER_TEMP/ci.keychain-db
-          security set-keychain-settings -lut 21600 $RUNNER_TEMP/ci.keychain-db
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $RUNNER_TEMP/ci.keychain-db
-          security import $RUNNER_TEMP/cert.p12 -P "$P12_PASSWORD" -A -k $RUNNER_TEMP/ci.keychain-db
-          security list-keychain -d user -s login.keychain $RUNNER_TEMP/ci.keychain-db
+          security import $RUNNER_TEMP/cert.p12 -k $RUNNER_TEMP/ci.keychain-db -P "$P12_PASSWORD" -A -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $RUNNER_TEMP/ci.keychain-db 2>/dev/null || true
+          security list-keychain -d user -s $RUNNER_TEMP/ci.keychain-db
       - name: Install Profile
         env:
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
@@ -39,7 +39,7 @@ jobs:
           echo "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/wildcard.mobileprovision
       - name: Archive
         run: |
-          xcodebuild -project Focus Timer Pro.xcodeproj -scheme iosApp -configuration Release \
+          xcodebuild -project "Focus Timer Pro.xcodeproj" -scheme iosApp -configuration Release \
             -archivePath $RUNNER_TEMP/app.xcarchive \
             DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
             -allowProvisioningUpdates archive
