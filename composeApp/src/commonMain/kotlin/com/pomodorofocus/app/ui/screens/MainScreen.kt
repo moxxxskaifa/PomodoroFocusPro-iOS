@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pomodorofocus.app.platform.HapticFeedback
 import kotlinx.coroutines.delay
+import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class TimerMode { FOCUS, SHORT_BREAK, LONG_BREAK }
 
@@ -78,7 +79,7 @@ fun MainScreen() {
                         Icon(
                             if (selectedTab == 0) Icons.Default.BarChart else Icons.Default.Timer,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant
                         )
                     }
                 }
@@ -116,16 +117,16 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
                 val sel = state.mode == mode
                 val chipColor = when (mode) {
                     TimerMode.FOCUS -> MaterialTheme.colorScheme.primary
-                    TimerMode.SHORT_BREAK -> BreakBlue
-                    TimerMode.LONG_BREAK -> LongBreakPurple
+                    TimerMode.SHORT_BREAK -> Color(0xFF4FC3F7)
+                    TimerMode.LONG_BREAK -> Color(0xFF9575CD)
                 }
-                Surface(
+                MaterialTheme.colorScheme.surface(
                     onClick = { onUpdate(state.copy(mode = mode, isRunning = false,
                         secondsRemaining = when(mode){FOCUS->25*60;SHORT_BREAK->5*60;LONG_BREAK->15*60},
                         totalSeconds = when(mode){FOCUS->25*60;SHORT_BREAK->5*60;LONG_BREAK->15*60})) },
                     shape = RoundedCornerShape(26.dp),
                     color = if (sel) chipColor else Color.Transparent,
-                    contentColor = if (sel) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                    contentColor = if (sel) Color.White else MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Text(label, modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
                          fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
@@ -138,15 +139,15 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
         // Circular timer
         val arcColor = when (state.mode) {
             TimerMode.FOCUS -> MaterialTheme.colorScheme.primary
-            TimerMode.SHORT_BREAK -> BreakBlue
-            TimerMode.LONG_BREAK -> LongBreakPurple
+            TimerMode.SHORT_BREAK -> Color(0xFF4FC3F7)
+            TimerMode.LONG_BREAK -> Color(0xFF9575CD)
         }
         val bgColor = MaterialTheme.colorScheme.surfaceVariant
 
         Box(Modifier.size(280.dp), contentAlignment = Alignment.Center) {
             Canvas(Modifier.fillMaxSize()) {
                 val stroke = 14.dp.toPx()
-                val s = size - stroke
+                val s = size.width.coerceAtMost(size.height) - stroke
                 drawArc(bgColor, -90f, 360f, false, Offset(stroke / 2, stroke / 2), Size(s, s),
                     style = Stroke(stroke, cap = StrokeCap.Round))
                 drawArc(arcColor, -90f, 360f * (1.0f - progress), false, Offset(stroke / 2, stroke / 2), Size(s, s),
@@ -158,13 +159,13 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("%02d:%02d".format(min, sec), fontSize = 56.sp,
                      fontWeight = FontWeight.Bold, letterSpacing = 2.sp,
-                     color = MaterialTheme.colorScheme.onBackground)
+                     color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.background)
                 Spacer(Modifier.height(4.dp))
                 val modeText = when (state.mode) {
                     FOCUS -> "FOCUS TIME"; SHORT_BREAK -> "SHORT BREAK"; LONG_BREAK -> "LONG BREAK"
                 }
                 Text(modeText, fontSize = 12.sp, fontWeight = FontWeight.Medium,
-                     letterSpacing = 3.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                     letterSpacing = 3.sp, color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
             }
         }
 
@@ -182,7 +183,7 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
                 colors = ButtonDefaults.filledTonalButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
                 Icon(Icons.Default.Refresh, null, Modifier.size(22.dp),
-                     tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                     tint = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
             }
 
             // Start/Pause - main button
@@ -206,7 +207,7 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
                 colors = ButtonDefaults.filledTonalButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
                 Icon(Icons.Default.SkipNext, null, Modifier.size(22.dp),
-                     tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                     tint = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
             }
         }
 
@@ -219,7 +220,7 @@ private fun TimerScreen(state: TimerState, onUpdate: (TimerState) -> Unit) {
                 Spacer(Modifier.width(4.dp))
                 val label = if (state.completedSessions > 1) "s" else ""
                 Text("${state.completedSessions} pomodoro${label} today",
-                     fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                     fontSize = 13.sp, color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
             }
             Spacer(Modifier.height(4.dp))
             Row(horizontalArrangement = Arrangement.Center) {
@@ -248,15 +249,15 @@ private fun StatsScreen(state: TimerState) {
             StatCard("Pomodoros", state.completedSessions.toString(), Icons.Default.CheckCircle,
                 MaterialTheme.colorScheme.primary, Modifier.weight(1.0f))
             StatCard("Focus Time", state.totalFocusMinutes.toString() + " min", Icons.Default.Timer,
-                PomodoroSecondary, Modifier.weight(1.0f))
+                MaterialTheme.colorScheme.secondary, Modifier.weight(1.0f))
         }
         Spacer(Modifier.height(12.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             StatCard("Best Streak", "0 days", Icons.Default.LocalFireDepartment,
-                LongBreakPurple, Modifier.weight(1.0f))
+                Color(0xFF9575CD), Modifier.weight(1.0f))
             val avg = if (state.completedSessions > 0) state.totalFocusMinutes / state.completedSessions else 0
             StatCard("Avg Session", avg.toString() + " min", Icons.Default.TrendingUp,
-                BreakBlue, Modifier.weight(1.0f))
+                Color(0xFF4FC3F7), Modifier.weight(1.0f))
         }
 
         Spacer(Modifier.height(24.dp))
@@ -271,7 +272,7 @@ private fun StatsScreen(state: TimerState) {
             Column(Modifier.padding(20.dp)) {
                 Row(Modifier.fillMaxWidth()) {
                     Text("Complete 8 pomodoros", fontSize = 14.sp,
-                         color = MaterialTheme.colorScheme.onSurfaceVariant)
+                         color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
                     Spacer(Modifier.weight(1.0f))
                     Text("{state.completedSessions}/8", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                 }
@@ -304,7 +305,7 @@ private fun StatsScreen(state: TimerState) {
                 ).forEach { tip ->
                     Row(verticalAlignment = Alignment.Top) {
                         Text("•  ", fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
-                        Text(tip, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        Text(tip, fontSize = 14.sp, color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant,
                              lineHeight = 22.sp)
                     }
                     Spacer(Modifier.height(6.dp))
@@ -327,8 +328,8 @@ private fun StatCard(label: String, value: String, icon: ImageVector, color: Col
             }
             Spacer(Modifier.height(10.dp))
             Text(value, fontSize = 22.sp, fontWeight = FontWeight.Bold,
-                 color = MaterialTheme.colorScheme.onSurface)
-            Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                 color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surface)
+            Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onMaterialTheme.colorScheme.surfaceVariant)
         }
     }
 }
