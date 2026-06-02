@@ -108,9 +108,10 @@ private fun TimerTab(state: TimerState, onStart: () -> Unit, onPause: () -> Unit
                 drawArc(arcColor, -90f, 360f * (1f - progress), false, Offset(stroke / 2, stroke / 2), Size(width = s, height = s), style = Stroke(stroke, cap = StrokeCap.Round))
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text( fontSize = 52.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+                val timeText = min.toString().padStart(2, '0') + ":" + sec.toString().padStart(2, '0')
+                Text(timeText, fontSize = 52.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
                 Spacer(Modifier.height(8.dp))
-                Text(when (state.mode) { TimerMode.FOCUS -> "TimerMode.FOCUS TIME"; TimerMode.SHORT_BREAK -> "BREAK"; TimerMode.LONG_BREAK -> "LONG BREAK" },
+                Text(when (state.mode) { TimerMode.FOCUS -> "FOCUS TIME"; TimerMode.SHORT_BREAK -> "BREAK"; TimerMode.LONG_BREAK -> "LONG BREAK" },
                     fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
