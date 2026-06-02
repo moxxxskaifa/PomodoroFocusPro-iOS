@@ -1,5 +1,5 @@
 name: Check Compile
-on: [push, pull_request]
+on: [push]
 jobs:
   check:
     runs-on: macos-latest
@@ -9,10 +9,9 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-      - uses: gradle/actions/setup-gradle@v3
       - name: Install Gradle
         run: brew install gradle
-      - name: Compile Android Debug
+      - name: Android Debug
         run: gradle :composeApp:assembleDebug
-      - name: Link iOS Framework
-        run: gradle :composeApp:assembleDebug
+      - name: iOS Framework
+        run: gradle :composeApp:linkDebugFrameworkIosArm64
