@@ -18,7 +18,17 @@ jobs:
       - name: Install xcodegen
         run: brew install xcodegen
       - name: Generate Xcode Project
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          # Force the correct signing identity in the generated project
+          cd "Focus Timer Pro.xcodeproj"
+          sed -i '' 's/CODE_SIGN_IDENTITY = "iOS Distribution"/CODE_SIGN_IDENTITY = "Apple Distribution"/g' project.pbxproj
+          # Fix development team
+          sed -i '' 's/DEVELOPMENT_TEAM = ""/DEVELOPMENT_TEAM = S45CCRJ5NS/g' project.pbxproj
+          sed -i '' 's/DEVELOPMENT_TEAM = "[^"]*"/DEVELOPMENT_TEAM = "S45CCRJ5NS"/g' project.pbxproj
+          # Force manual signing
+          sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' project.pbxproj
+          cd ..
       - name: Import Certificate
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -44,17 +54,16 @@ jobs:
             -scheme iosApp \
             -configuration Release \
             -archivePath $RUNNER_TEMP/app.xcarchive \
-            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
+            DEVELOPMENT_TEAM="S45CCRJ5NS" \
             PROVISIONING_PROFILE="16827c3b-7a45-432f-87cd-84b9f335cdca" \
-            archive
+            -allowProvisioningUpdates archive
       - name: Export IPA
         run: |
           xcodebuild -exportArchive \
             -archivePath $RUNNER_TEMP/app.xcarchive \
             -exportPath $RUNNER_TEMP/IPA \
-            -exportOptionsPlist exportOptions.plist
+            -exportOptionsPlist exportOptions.plist \
+            -allowProvisioningUpdates
       - name: Upload to App Store
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
