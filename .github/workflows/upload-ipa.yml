@@ -30,15 +30,12 @@ jobs:
           require 'xcodeproj'
           p = Xcodeproj::Project.open('Focus Timer Pro.xcodeproj')
           p.targets.each do |t|
-            # Fix signing
             t.build_configurations.each do |c|
               c.build_settings['CODE_SIGN_STYLE'] = 'Manual'
               c.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Distribution'
               c.build_settings['DEVELOPMENT_TEAM'] = 'S45CCRJ5NS'
               c.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = 'AllApps_AppStore_Distribution'
             end
-            # Remove Info.plist from Copy Bundle Resources to prevent duplicate
-            t.resources_build_phase.files.reject! { |f| f.file_ref&.path&.end_with?('Info.plist') }
           end
           p.save
           puts 'Project configured!'
@@ -71,9 +68,7 @@ jobs:
             -scheme iosApp \
             -configuration Release \
             -archivePath $RUNNER_TEMP/app.xcarchive \
-            -allowProvisioningUpdates \
-            EXCLUDED_SOURCE_FILE_NAMES="Info.plist" \
-            archive
+            -allowProvisioningUpdates archive
 
       - name: Export IPA
         run: |
