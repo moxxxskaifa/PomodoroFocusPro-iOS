@@ -9,7 +9,7 @@ targets:
     sources: [iosApp]
     settings:
       base:
-        INFOPLIST_FILE: iosApp/AppInfo.plist
+        INFOPLIST_FILE: iosApp/iosApp/AppInfo.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.moxxxskaifa.PomodoroFocusPro
     dependencies:
       - framework: composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework
