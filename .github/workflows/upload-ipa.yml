@@ -35,6 +35,7 @@ jobs:
               c.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Distribution'
               c.build_settings['DEVELOPMENT_TEAM'] = 'S45CCRJ5NS'
               c.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = 'AllApps_AppStore_Distribution'
+              c.build_settings['GENERATE_INFOPLIST_FILE'] = 'NO'
             end
           end
           p.save
