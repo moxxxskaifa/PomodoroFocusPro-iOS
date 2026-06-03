@@ -11,6 +11,10 @@ targets:
       base:
         INFOPLIST_FILE: iosApp/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.moxxxskaifa.PomodoroFocusPro
+        DEVELOPMENT_TEAM: S45CCRJ5NS
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: Apple Distribution
+        PROVISIONING_PROFILE_SPECIFIER: AllApps_AppStore_Distribution
     dependencies:
       - framework: composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework
         embed: true
