@@ -6,6 +6,11 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Select Xcode 26
+        run: |
+          ls /Applications/Xcode*.app 2>/dev/null || true
+          sudo xcode-select -s /Applications/Xcode_26.0.app 2>/dev/null || sudo xcode-select -s /Applications/Xcode_26.app 2>/dev/null || echo "Xcode 26 not found, using default"
+          xcodebuild -version
       - uses: actions/setup-java@v4
         with: { distribution: 'zulu', java-version: '17' }
 
