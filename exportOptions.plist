@@ -3,7 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>method</key><string>app-store</string>
-    <key>teamID</key><string>S45CCJRJNS</string>
+    <key>teamID</key><string>S45CCRJ5NS</string>
     <key>uploadSymbols</key><true/>
+    <key>signingCertificate</key><string>Apple Distribution</string>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>com.moxxxskaifa.PomodoroFocusPro</key>
+        <string>AllApps_AppStore_Distribution</string>
+    </dict>
 </dict>
 </plist>
