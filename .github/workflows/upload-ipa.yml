@@ -73,7 +73,7 @@ jobs:
             -scheme iosApp \
             -configuration Release \
             -archivePath $RUNNER_TEMP/app.xcarchive \
-            -allowProvisioningUpdates archive
+            -allowProvisioningUpdates
 
       - name: Export IPA
         run: |
