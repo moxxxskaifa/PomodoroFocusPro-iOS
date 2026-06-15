@@ -54,9 +54,12 @@ jobs:
         run: |
           echo "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $RUNNER_TEMP/cert.p12
           openssl pkcs12 -in $RUNNER_TEMP/cert.p12 -nokeys -clcerts -passin pass:"$P12_PASSWORD" 2>/dev/null | openssl x509 -noout -subject -serial -dates
+          openssl pkcs12 -in $RUNNER_TEMP/cert.p12 -clcerts -nokeys -passin pass:"$P12_PASSWORD" -out $RUNNER_TEMP/cert.cer
+          openssl pkcs12 -in $RUNNER_TEMP/cert.p12 -nocerts -nodes -passin pass:"$P12_PASSWORD" -out $RUNNER_TEMP/key.pem
           security create-keychain -p "$KEYCHAIN_PASSWORD" $RUNNER_TEMP/ci.keychain-db
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $RUNNER_TEMP/ci.keychain-db
-          security import $RUNNER_TEMP/cert.p12 -k $RUNNER_TEMP/ci.keychain-db -P "$P12_PASSWORD" -A -T /usr/bin/codesign
+          security import $RUNNER_TEMP/cert.cer -k $RUNNER_TEMP/ci.keychain-db -A -T /usr/bin/codesign
+          security import $RUNNER_TEMP/key.pem -k $RUNNER_TEMP/ci.keychain-db -A -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $RUNNER_TEMP/ci.keychain-db 2>/dev/null || true
           security list-keychain -d user -s $RUNNER_TEMP/ci.keychain-db
 
