@@ -53,6 +53,7 @@ jobs:
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
           echo "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $RUNNER_TEMP/cert.p12
+          openssl pkcs12 -in $RUNNER_TEMP/cert.p12 -nokeys -clcerts -passin pass:"$P12_PASSWORD" 2>/dev/null | openssl x509 -noout -subject -serial -dates
           security create-keychain -p "$KEYCHAIN_PASSWORD" $RUNNER_TEMP/ci.keychain-db
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $RUNNER_TEMP/ci.keychain-db
           security import $RUNNER_TEMP/cert.p12 -k $RUNNER_TEMP/ci.keychain-db -P "$P12_PASSWORD" -A -T /usr/bin/codesign
