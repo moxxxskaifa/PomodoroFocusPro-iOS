@@ -11,6 +11,15 @@ jobs:
           ls /Applications/Xcode*.app 2>/dev/null || true
           sudo xcode-select -s /Applications/Xcode_26.0.app 2>/dev/null || sudo xcode-select -s /Applications/Xcode_26.app 2>/dev/null || echo "Xcode 26 not found, using default"
           xcodebuild -version
+
+      - name: Install iOS 26 Platform
+        run: |
+          echo "Checking available SDKs..."
+          xcodebuild -showsdks
+          echo "Downloading iOS 26.0 platform..."
+          xcodebuild -downloadPlatform iOS -quiet || echo "Platform download skipped or already installed"
+          echo "Verifying..."
+          xcodebuild -showsdks | grep -i iphone
       - uses: actions/setup-java@v4
         with: { distribution: 'zulu', java-version: '17' }
 
