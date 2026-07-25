@@ -72,6 +72,7 @@ jobs:
             -project "Focus Timer Pro.xcodeproj" \
             -scheme iosApp \
             -configuration Release \
+            -destination "generic/platform=iOS" \
             -archivePath $RUNNER_TEMP/app.xcarchive \
             -allowProvisioningUpdates archive
 
